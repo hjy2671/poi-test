@@ -1,14 +1,12 @@
 package org.example;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 
-public class CpPool {
+public class PlanePool {
 
     private final Map<String, Object> map;
 
-    public CpPool(Map<String, Object> source) {
+    public PlanePool(Map<String, Object> source) {
         map = source;
     }
 

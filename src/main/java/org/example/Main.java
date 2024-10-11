@@ -1,4 +1,4 @@
-package top.peak;
+package org.example;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellType;
@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.SchemaType;
+import org.example.ChartResolver;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTChart;
 import org.openxmlformats.schemas.drawingml.x2006.chart.impl.CTNumDataImpl;
 
@@ -18,7 +19,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hjy
@@ -26,12 +29,26 @@ import java.util.List;
  */
 public class Main {
     static String path = "C:\\Users\\123\\Desktop\\test\\5\\target.docx";
-    static String read = "C:\\Users\\123\\Desktop\\test\\5\\read.docx";
+    static String read = "C:\\Users\\hjy\\Desktop\\temp\\5\\read.docx";
     static String template = "C:\\Users\\123\\Desktop\\test\\5\\template.docx";
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
 //        createDocument();
 
-        readDocument4();
+//        readDocument4();
+
+        Map<String, Map<String, Object>> map = new HashMap<>();//测试参数
+        map.put("planePool", Map.of("title", "再别康桥", "actor", "徐志摩"));
+        map.put("tablePool", Map.of("students", List.of(Map.of("name", "小明", "age", 18),Map.of("name", "张三", "age", 15))));
+        map.put("dispatchPool", Map.of("ageChats", Map.of("data", "#{students}")));
+
+        Context context = Context.Factory.createContext(map);
+
+
+    }
+
+    public static XWPFDocument get() throws IOException {
+        FileInputStream inputStream = new FileInputStream(read);
+        return new XWPFDocument(inputStream);
     }
 
     public static void readDocument4() throws FileNotFoundException {
