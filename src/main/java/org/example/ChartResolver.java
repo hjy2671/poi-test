@@ -1,8 +1,11 @@
 package org.example;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xddf.usermodel.chart.XDDFCategoryDataSource;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
+import org.apache.poi.xddf.usermodel.chart.XDDFDataSourcesFactory;
 import org.apache.poi.xddf.usermodel.text.XDDFTextBody;
 import org.apache.poi.xddf.usermodel.text.XDDFTextParagraph;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -77,10 +80,13 @@ public class ChartResolver {
 
             List<XDDFChartData> chartSeries = chart.getChartSeries();
 
+            XDDFCategoryDataSource category = XDDFDataSourcesFactory.fromStringCellRange(sheet, new CellRangeAddress(dataRowStartIndex, chartData.size()-1, 0, 0));
+
             for (XDDFChartData chartSerData : chartSeries) {
 
                 for (int i = 0; i < chartSerData.getSeriesCount(); i++) {
                     XDDFChartData.Series series = chartSerData.getSeries(i);
+//                    series.pl
 //                    String seriesText = series.().getStrRef().getStrCache().getPtArray(0).getV();
                     XDDFDataSource<?> categoryData = series.getCategoryData();
                 }

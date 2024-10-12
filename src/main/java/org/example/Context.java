@@ -50,7 +50,7 @@ public class Context {
             if (val instanceof Map) {
                 return (Map<String, Object>) val;
             }
-            throw new IllegalArgumentException("param is illegal, should be {key:value}");
+            throw new IllegalArgumentException("param should be {key:value}");
         }
 
 
