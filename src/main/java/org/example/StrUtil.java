@@ -18,4 +18,11 @@ public class StrUtil {
         return  pattern.matcher(source).matches();
     }
 
+    public static String ifKey(String source) {
+        if (isKey(source)) {
+            return extractKey(source);
+        }
+        return null;
+    }
+
 }

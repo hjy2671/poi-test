@@ -19,6 +19,18 @@ public class Context {
         this.dispatchPool = dispatchPool;
     }
 
+    public PlanePool getPlanePool() {
+        return planePool;
+    }
+
+    public TablePool getTablePool() {
+        return tablePool;
+    }
+
+    public DispatchPool getDispatchPool() {
+        return dispatchPool;
+    }
+
     public static class Factory {
 
         private static final Map<String, Object> EMPTY_MAP = new HashMap<>();

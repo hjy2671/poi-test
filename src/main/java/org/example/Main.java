@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class Main {
     static String path = "C:\\Users\\123\\Desktop\\test\\5\\target.docx";
-    static String read = "C:\\Users\\hjy\\Desktop\\temp\\5\\read.docx";
+    static String read = "C:\\Users\\123\\Desktop\\test\\5\\read.docx";
     static String template = "C:\\Users\\123\\Desktop\\test\\5\\template.docx";
     public static void main(String[] args) throws IOException {
 //        createDocument();
@@ -38,11 +38,25 @@ public class Main {
 
         Map<String, Map<String, Object>> map = new HashMap<>();//测试参数
         map.put("planePool", Map.of("title", "再别康桥", "actor", "徐志摩"));
-        map.put("tablePool", Map.of("students", List.of(Map.of("name", "小明", "age", 18),Map.of("name", "张三", "age", 15))));
-        map.put("dispatchPool", Map.of("ageChats", Map.of("data", "#{students}")));
+        map.put("tablePool", Map.of("students", List.of(
+                Map.of("name", "小明", "age", 18, "money", 120),
+                Map.of("name", "张三", "age", 15, "money", 60),
+                Map.of("name", "发多少", "age", 30, "money", 75),
+                Map.of("name", "电风扇", "age", 20, "money", 90)
+        )));
+        map.put("dispatchPool", Map.of("ageCharts", Map.of("data", "students")));
 
         Context context = Context.Factory.createContext(map);
 
+        ChartResolver resolver = new ChartResolver(context);
+
+        XWPFDocument document = get();
+        resolver.resolve(document.getCharts().getFirst());
+
+        FileOutputStream stream = new FileOutputStream(path);
+        document.write(stream);
+        stream.flush();
+        stream.close();
 
     }
 
