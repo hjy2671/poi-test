@@ -2,10 +2,7 @@ package org.example;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xddf.usermodel.chart.XDDFCategoryDataSource;
-import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
-import org.apache.poi.xddf.usermodel.chart.XDDFDataSourcesFactory;
+import org.apache.poi.xddf.usermodel.chart.*;
 import org.apache.poi.xddf.usermodel.text.XDDFTextBody;
 import org.apache.poi.xddf.usermodel.text.XDDFTextParagraph;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -13,6 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
+import org.example.util.StrUtil;
 
 import java.io.IOException;
 import java.util.*;
@@ -67,31 +65,41 @@ public class ChartResolver {
             }
 
             int dataRowStartIndex = 2;
+            int dataRowEndIndex = dataRowStartIndex + chartData.size() - 1;
+            int currentRowIndex = dataRowStartIndex;
 
             for (Map<String, Object> rowData : chartData) {
-                XSSFRow currentRow = sheet.createRow(dataRowStartIndex);
-                for (int i = 0; i < config.size(); i++) {
-                    XSSFCell cell = currentRow.createCell(i);
-                    Object cellValue = rowData.get(config.get(i));
-                    cell.setCellValue(cellValue == null ? null : cellValue.toString());
+
+                XSSFRow currentRow = sheet.getRow(currentRowIndex);
+                if (currentRow == null) {
+                    currentRow = sheet.createRow(currentRowIndex);//找不到行，创建行
                 }
-                dataRowStartIndex++;
+
+                for (int i = 0; i < config.size(); i++) {
+
+                    XSSFCell cell = currentRow.getCell(i);
+                    if (cell == null) {
+                        cell = currentRow.createCell(i);//没有单元格就创建单元格
+                    }
+
+                    Object cellValue = rowData.get(config.get(i));//按顺序填充list的数据
+                    cell.setCellValue(cellValue == null ? null : cellValue.toString());
+
+                }
+                currentRowIndex++;
             }
 
             List<XDDFChartData> chartSeries = chart.getChartSeries();
-
-            XDDFCategoryDataSource category = XDDFDataSourcesFactory.fromStringCellRange(sheet, new CellRangeAddress(dataRowStartIndex, chartData.size()-1, 0, 0));
+            XDDFCategoryDataSource category = XDDFDataSourcesFactory.fromStringCellRange(sheet, new CellRangeAddress(dataRowStartIndex, dataRowEndIndex, 0, 0));
 
             for (XDDFChartData chartSerData : chartSeries) {
 
                 for (int i = 0; i < chartSerData.getSeriesCount(); i++) {
                     XDDFChartData.Series series = chartSerData.getSeries(i);
-//                    series.pl
-//                    String seriesText = series.().getStrRef().getStrCache().getPtArray(0).getV();
-                    XDDFDataSource<?> categoryData = series.getCategoryData();
+                    XDDFNumericalDataSource<Double> valuesData = XDDFDataSourcesFactory.fromNumericCellRange(sheet, new CellRangeAddress(dataRowStartIndex, dataRowEndIndex, i+1, i+1));
+                    series.replaceData(category, valuesData);
                 }
-
-                chart.plot(chartSerData);
+                chart.plot(chartSerData);//TODO 这里替换还有些问题
             }
 
 
