@@ -28,8 +28,8 @@ import java.util.Map;
  * @date 2024/9/22 20:55
  */
 public class Main {
-    static String path = "C:\\Users\\123\\Desktop\\test\\5\\target.docx";
-    static String read = "C:\\Users\\123\\Desktop\\test\\5\\read.docx";
+    static String path = "C:\\Users\\hjy\\Desktop\\temp\\5\\target.docx";
+    static String read = "C:\\Users\\hjy\\Desktop\\temp\\5\\read.docx";
     static String template = "C:\\Users\\123\\Desktop\\test\\5\\template.docx";
     public static void main(String[] args) throws IOException {
 //        createDocument();
@@ -39,10 +39,10 @@ public class Main {
         Map<String, Map<String, Object>> map = new HashMap<>();//测试参数
         map.put("planePool", Map.of("title", "再别康桥", "actor", "徐志摩"));
         map.put("tablePool", Map.of("students", List.of(
-                Map.of("name", "小明", "age", 18, "money", 120),
-                Map.of("name", "张三", "age", 15, "money", 60),
-                Map.of("name", "发多少", "age", 30, "money", 75),
-                Map.of("name", "电风扇", "age", 20, "money", 90)
+                Map.of("name", "小明", "age", 18, "money", 56, "height", 170, "weight", 120),
+                Map.of("name", "张三", "age", 21, "money", 21, "height", 170, "weight", 120),
+                Map.of("name", "李四", "age", 50, "money", 63, "height", 170, "weight", 120),
+                Map.of("name", "王八", "age", 31, "money", 73, "height", 170, "weight", 120)
         )));
         map.put("dispatchPool", Map.of("ageCharts", Map.of("data", "students")));
 

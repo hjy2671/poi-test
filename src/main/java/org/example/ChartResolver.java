@@ -51,9 +51,14 @@ public class ChartResolver {
 
     public void resolve(XWPFChart chart, List<Map<String, Object>> chartData) {
         try {
+            int dataRowStartIndex = 1;
+            int dataRowEndIndex = dataRowStartIndex + chartData.size() - 1;
+            int currentRowIndex = dataRowStartIndex;
+            int sheetIndex = 0;
+
             XSSFWorkbook workbook = chart.getWorkbook();
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            XSSFRow row = sheet.getRow(0);//config row
+            XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
+            XSSFRow row = sheet.getRow(dataRowStartIndex);//config row
             short lastCellNum = row.getLastCellNum();
 
             List<String> config = new ArrayList<>();
@@ -61,12 +66,9 @@ public class ChartResolver {
                 XSSFCell cell = row.getCell(i);
                 String key = cell.getStringCellValue();
                 config.add(key);
-                row.removeCell(cell);
             }
 
-            int dataRowStartIndex = 2;
-            int dataRowEndIndex = dataRowStartIndex + chartData.size() - 1;
-            int currentRowIndex = dataRowStartIndex;
+
 
             for (Map<String, Object> rowData : chartData) {
 
@@ -83,7 +85,12 @@ public class ChartResolver {
                     }
 
                     Object cellValue = rowData.get(config.get(i));//按顺序填充list的数据
-                    cell.setCellValue(cellValue == null ? null : cellValue.toString());
+                    if (cellValue instanceof String) {
+                        cell.setCellValue(cellValue.toString());
+                    }
+                    if (cellValue instanceof Number) {
+                        cell.setCellValue(((Number) cellValue).doubleValue());
+                    }
 
                 }
                 currentRowIndex++;
@@ -93,17 +100,14 @@ public class ChartResolver {
             XDDFCategoryDataSource category = XDDFDataSourcesFactory.fromStringCellRange(sheet, new CellRangeAddress(dataRowStartIndex, dataRowEndIndex, 0, 0));
 
             for (XDDFChartData chartSerData : chartSeries) {
-
                 for (int i = 0; i < chartSerData.getSeriesCount(); i++) {
-                    XDDFChartData.Series series = chartSerData.getSeries(i);
+                    XDDFChartData.Series series = chartSerData.getSeries(i);//TODO 这里应该要根据系列本来的区域描述字符，进行匹配新的区域数据，否则组合图表的情况下数据会丢失
                     XDDFNumericalDataSource<Double> valuesData = XDDFDataSourcesFactory.fromNumericCellRange(sheet, new CellRangeAddress(dataRowStartIndex, dataRowEndIndex, i+1, i+1));
                     series.replaceData(category, valuesData);
                 }
-                chart.plot(chartSerData);//TODO 这里替换还有些问题
+                chart.plot(chartSerData);
             }
 
-
-            System.out.println(1);
         } catch (IOException | InvalidFormatException e) {
             throw new RuntimeException(e);
         }
