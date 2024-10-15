@@ -10,6 +10,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
+import org.example.util.SheetUtil;
 import org.example.util.StrUtil;
 
 import java.io.IOException;
@@ -101,8 +102,11 @@ public class ChartResolver {
 
             for (XDDFChartData chartSerData : chartSeries) {
                 for (int i = 0; i < chartSerData.getSeriesCount(); i++) {
-                    XDDFChartData.Series series = chartSerData.getSeries(i);//TODO 这里应该要根据系列本来的区域描述字符，进行匹配新的区域数据，否则组合图表的情况下数据会丢失
-                    XDDFNumericalDataSource<Double> valuesData = XDDFDataSourcesFactory.fromNumericCellRange(sheet, new CellRangeAddress(dataRowStartIndex, dataRowEndIndex, i+1, i+1));
+                    XDDFChartData.Series series = chartSerData.getSeries(i);
+                    String formula = series.getValuesData().getFormula();
+                    int index = SheetUtil.parseCellColIndexFromRef(formula);
+
+                    XDDFNumericalDataSource<Double> valuesData = XDDFDataSourcesFactory.fromNumericCellRange(sheet, new CellRangeAddress(dataRowStartIndex, dataRowEndIndex, index, index));
                     series.replaceData(category, valuesData);
                 }
                 chart.plot(chartSerData);
