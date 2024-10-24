@@ -33,9 +33,10 @@ public class Test {
                 "r1v2", 20,
                 "r2v1", 30,
                 "r2v2", 40,
-                "content1", "我是一个好人",
-                "content3", "我是一个坏人"
-
+                "content1", "[我是一个好人]",
+                "content3", "[我是一个坏人]",
+                "content2", "[我是一个坏人]",
+                "content4", "[我是一个坏人]"
         ));
         map.put("group",
                 Map.of("ageCharts", Map.of(
@@ -46,7 +47,8 @@ public class Test {
                                 Map.of("name", "张三", "age", 21, "money", 21, "height", 130, "weight", 105),
                                 Map.of("name", "李四", "age", 50, "money", 63, "height", 190, "weight", 90),
                                 Map.of("name", "王八", "age", 31, "money", 73, "height", 110, "weight", 180)),
-                        "styleContent", Map.of("data", "我是最后一段文字", "fontSize", 25)
+                        "styleContent", Map.of("data", "我是最后一段文字", "fontSize", 25),
+                        "title", Map.of("data", "再别康桥", "fontSize", 25)
                 )
         );
 
