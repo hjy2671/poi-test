@@ -56,8 +56,4 @@ public class StrUtil {
         return  c == Constant.CONSTANT_PREFIX || c == Constant.GROUP_PREFIX;
     }
 
-    public static void main(String[] args) {
-        System.out.println(findKey("#{abc}").getResult(null));
-    }
-
 }

@@ -16,6 +16,8 @@ public interface Pool {
      */
     Number getNumber(String key);
 
+    boolean getBoolean(String key);
+
     /**
      * 从池中取一个值，并转换成Pool
      * @param key String

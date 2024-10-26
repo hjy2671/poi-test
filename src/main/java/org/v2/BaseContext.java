@@ -46,6 +46,11 @@ public class BaseContext implements Context {
     }
 
     @Override
+    public boolean getBoolean(String key) {
+        return selectPool(key).getBoolean(createKey(key));
+    }
+
+    @Override
     public Pool getPool(String key) {
         return selectPool(key).getPool(createKey(key));
     }

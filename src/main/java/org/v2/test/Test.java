@@ -48,7 +48,7 @@ public class Test {
                                 Map.of("name", "李四", "age", 50, "money", 63, "height", 190, "weight", 90),
                                 Map.of("name", "王八", "age", 31, "money", 73, "height", 110, "weight", 180)),
                         "styleContent", Map.of("data", "我是最后一段文字", "fontSize", 25),
-                        "title", Map.of("data", "再别康桥", "fontSize", 25)
+                        "title", Map.of("data", "再别康桥", "fontFamily", "NSimSun", "fontSize", 30)
                 )
         );
 

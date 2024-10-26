@@ -30,6 +30,15 @@ public abstract class AbstractPool implements Pool{
     }
 
     @Override
+    public boolean getBoolean(String key) {
+        Object def = meta.getOrDefault(key, null);
+        if (def  == null) {
+            return false;
+        }
+        return Boolean.parseBoolean(def.toString());
+    }
+
+    @Override
     public Pool getPool(String key) {
         throw new UnsupportedOperationException("getPool is unsupported");
     }

@@ -3,6 +3,7 @@ package org.v2.core;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.v2.Context;
+import org.v2.Pool;
 import org.v2.util.StrUtil;
 
 import java.util.*;
@@ -86,7 +87,7 @@ public class ParagraphVisitor extends AbstractDocumentVisitor<XWPFParagraph>{
                     int index = 0;
                     String key = "";
                     for (int j = 0; j < linked.size(); j++) {
-                        RunWrapper wrapper = linked.get(j);//一定是startRunWrapper
+                        RunWrapper wrapper = linked.get(j);
                         rub.add(wrapper.run);
                         String innerText = wrapper.text;
                         int runIndex = wrapper.index;
@@ -179,6 +180,7 @@ public class ParagraphVisitor extends AbstractDocumentVisitor<XWPFParagraph>{
                 target.removeRun(i);
             }
         }
+
     }
 
     private static class RunWrapper {

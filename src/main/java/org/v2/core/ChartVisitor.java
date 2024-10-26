@@ -169,7 +169,7 @@ public class ChartVisitor extends AbstractDocumentVisitor<XWPFChart> {
                         cell = currentRow.createCell(i);//没有单元格就创建单元格
                     }
                     Object cellValue = table.getValue(r, config.get(i));//按顺序填充list的数据
-                    if ((r | i) == 0) {//category or series
+                    if (i == 0) {//category or series
                         cell.setCellValue(cellValue.toString());
                     } else {
                         cell.setCellValue(NumberUtil.toNum(cellValue).doubleValue());
