@@ -8,20 +8,23 @@ import org.v2.util.StrUtil;
 
 import java.util.*;
 
+import static org.v2.util.Constant.HOLDER_END;
+import static org.v2.util.Constant.HOLDER_START;
+
 /**
  * @author hjy
  * @date 2024/10/20 15:16
  */
 public class ParagraphVisitor extends AbstractDocumentVisitor<XWPFParagraph>{
 
-    private RunVisitor runVisitor;
+    private final RunVisitor runVisitor;
 
     public ParagraphVisitor() {
-        init();
+        this.runVisitor = createRunVisitor();
     }
 
-    protected void init() {
-        this.runVisitor = new RunVisitor();
+    protected RunVisitor createRunVisitor() {
+        return new RunVisitor();
     }
 
     @Override
@@ -33,7 +36,7 @@ public class ParagraphVisitor extends AbstractDocumentVisitor<XWPFParagraph>{
             XWPFRun run = runs.get(i);
             String text = run.getText(0);
             if (StrUtil.isKey(text)) {
-                runVisitor.visit(run, context);
+                visitRun(run, context);
             } else {
                 if (text == null) {
                     continue;
@@ -50,17 +53,17 @@ public class ParagraphVisitor extends AbstractDocumentVisitor<XWPFParagraph>{
                                 //不是最后一个run
                                 XWPFRun nextRun = runs.get(i + 1);
                                 String nextText = nextRun.getText(0);
-                                if (!nextText.isEmpty() && nextText.charAt(0) == '{') {
+                                if (!nextText.isEmpty() && nextText.charAt(0) == HOLDER_START) {
                                     run.setText(text.substring(0, text.length() - 1), 0);
                                     nextRun.setText(current + nextText, 0);
                                 }
                             }
-                        } else if (text.charAt(j + 1) == '{'){
+                        } else if (text.charAt(j + 1) == HOLDER_START){
                             //一个完整的key起始点
                             isMid = false;
                             linked.add(new StartRunWrapper(run, text, j, i));
                             for (int k = j + 2; k < len; k++) {
-                                if (text.charAt(k) == '}') {
+                                if (text.charAt(k) == HOLDER_END) {
                                     linked.add(new EndRunWrapper(run, text, k, i));
                                     hasEnd = true;
                                     j = k+1;
@@ -68,7 +71,7 @@ public class ParagraphVisitor extends AbstractDocumentVisitor<XWPFParagraph>{
                                 }
                             }
                         }
-                    } else if (current == '}' && (!linked.isEmpty() && !(linked.getLast() instanceof EndRunWrapper))) {
+                    } else if (current == HOLDER_END && (!linked.isEmpty() && !(linked.getLast() instanceof EndRunWrapper))) {
                         linked.add(new EndRunWrapper(run, text, j, i));
                         hasEnd = true;
                         isMid = false;
@@ -108,7 +111,7 @@ public class ParagraphVisitor extends AbstractDocumentVisitor<XWPFParagraph>{
                             key += innerText.substring(0, runIndex+1);
                             XWPFRun tmpRun = target.insertNewRun(i);
                             tmpRun.setText(key, 0);
-                            runVisitor.visit(tmpRun, context);
+                            visitRun(tmpRun, context);
                             i++;
                             index = runIndex;
                         }
@@ -126,7 +129,7 @@ public class ParagraphVisitor extends AbstractDocumentVisitor<XWPFParagraph>{
                                 key += innerText.substring(index, runIndex+1);
                                 XWPFRun tmpRun = target.insertNewRun(i);
                                 tmpRun.setText(key, 0);
-                                runVisitor.visit(tmpRun, context);
+                                visitRun(tmpRun, context);
                                 i++;
                                 index = runIndex;
                             } else {
@@ -181,6 +184,10 @@ public class ParagraphVisitor extends AbstractDocumentVisitor<XWPFParagraph>{
             }
         }
 
+    }
+
+    protected void visitRun(XWPFRun target, Context context) {
+        runVisitor.visit(target, context);
     }
 
     private static class RunWrapper {

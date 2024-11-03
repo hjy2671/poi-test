@@ -8,7 +8,11 @@ public interface Constant {
 
     char CONSTANT_PREFIX = '$';
     char GROUP_PREFIX = '#';
-    String TITLE = "title";//图表标题
+    char HOLDER_START = '{';
+    char HOLDER_END = '}';
+
+    String TYPE = "type";
+    String TITLE = "title";//标题
     String DATA = "data";//表示数据
     String STYLE = "style";//指定一组样式的引用#{}
     String FONT_SIZE = "fontSize"; //字体大小，数值
@@ -39,4 +43,7 @@ public interface Constant {
     String UNDERLINE_COLOR = "underlineColor";
     String VANISH = "vanish";
     String VERTICAL_ALIGNMENT = "verticalAlignment";
+    String CELL_COLOR = "cellColor";
+    String CELL_VERTICAL_ALIGN = "cellVerticalAlign";
+    String CELL_WIDTH = "cellWidth";
 }

@@ -4,6 +4,10 @@ package org.v2;
 import org.v2.util.StrUtil;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * @author hjy
@@ -13,8 +17,10 @@ import java.util.Map;
  */
 public class BaseContext implements Context {
 
+    private final Map<String, Object> contextCache = new ConcurrentHashMap<>();
     private Pool constantPool;
     private Pool groupPool;
+
 
     public BaseContext(Pool cPool, Pool groupMeta) {
         constantPool = cPool;
@@ -69,7 +75,33 @@ public class BaseContext implements Context {
         return StrUtil.ifKey(key);
     }
 
+    @Override
+    public Object put(String key, Object value) {
+        return contextCache.put(key, value);
+    }
 
+    @Override
+    public Object get(String key) {
+        return contextCache.get(key);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T get(String key, Class<T> type) {
+        Object o = get(key);
+        if (o == null || type.isInstance(o))
+            return (T) o;
+        throw new  ClassCastException("can not cast to " + type.getName());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> Optional<T> pop(String key, Class<T> type) {
+        Object o = contextCache.remove(key);
+        if (o == null || type.isInstance(o))
+            return Optional.ofNullable((T) o);
+        throw new  ClassCastException("can not cast to " + type.getName());
+    }
 
     public static class Factory {
         public static Context createContext(Map<String, ?> cache) {
@@ -80,5 +112,6 @@ public class BaseContext implements Context {
         }
 
     }
+
 
 }

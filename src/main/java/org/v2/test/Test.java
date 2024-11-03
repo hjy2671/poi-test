@@ -48,21 +48,27 @@ public class Test {
                                 Map.of("name", "李四", "age", 50, "money", 63, "height", 190, "weight", 90),
                                 Map.of("name", "王八", "age", 31, "money", 73, "height", 110, "weight", 180)),
                         "styleContent", Map.of("data", "我是最后一段文字", "fontSize", 25),
-                        "title", Map.of("data", "再别康桥", "fontFamily", "NSimSun", "fontSize", 30)
+                        "title", Map.of("data", "再别康桥", "fontFamily", "NSimSun", "fontSize", 30),
+                        "actor", Map.of("data", "徐志摩", "fontFamily", "NSimSun", "fontSize", 30, "bold", true),
+                        "table", Map.of("data", ""),
+                        "testT", Map.of("data", "红色背景", "cellColor", "ff0000", "color", "00ff00")
                 )
         );
 
-        long t = System.currentTimeMillis();
-
         XWPFDocument document = get();
+
+        long t = System.currentTimeMillis();
         WordUtil.resolveDocument(document, map);
+        System.out.println("cost:"+(System.currentTimeMillis()-t));
+
 
         FileOutputStream stream = new FileOutputStream(path);
         document.write(stream);
         stream.flush();
         stream.close();
 
-        System.out.println("cost:"+(System.currentTimeMillis()-t));
+
+
 
 
     }
